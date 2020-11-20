@@ -1,0 +1,35 @@
+<extension>
+  <modules>
+	<module>
+      		<id>Register Custom AMC Widget Package</id>
+      		<version>1.0</version>
+      		<auto-deploy>true</auto-deploy>
+      		<configurations>
+        		<config evaluator="string-compare" condition="WebFramework" replace="false">
+          			<web-framework>
+            			<dojo-pages>
+              				<packages>
+                				<package name="seed" location="js/seed"/>
+              				</packages>
+            			</dojo-pages>
+          			</web-framework>
+        		</config>
+      		</configurations>
+    </module>
+    <module>
+     <id>Add Dependencies</id>
+     <version>1.0</version>
+     <auto-deploy>true</auto-deploy>
+     <customizations>
+        <customization>
+           <targetPackageRoot>org.alfresco</targetPackageRoot>
+            <dependencies>
+               <css>/res/components/documentlibrary/seed-sync.css </css>
+               <js>/res/components/documentlibrary/seed-sync.js </js>
+            </dependencies>
+           <sourcePackageRoot></sourcePackageRoot>
+        </customization>
+       </customizations>
+</module>
+  </modules>
+</extension>
