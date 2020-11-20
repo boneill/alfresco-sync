@@ -1,0 +1,80 @@
+<extension>
+    <modules>
+    	<module>
+      		<id>Register Custom AMC Widget Package</id>
+      		<version>1.0</version>
+      		<auto-deploy>true</auto-deploy>
+      		<configurations>
+        		<config evaluator="string-compare" condition="WebFramework" replace="false">
+          			<web-framework>
+            			<dojo-pages>
+              				<packages>
+                				<package name="amc" location="js/amc"/>
+              				</packages>
+            			</dojo-pages>
+          			</web-framework>
+        		</config>
+      		</configurations>
+    	</module>
+        <module>
+            <id>Hide Share Site Creators</id>
+            <version>1.0</version>
+            <auto-deploy>true</auto-deploy>  
+            <evaluator type="group.module.evaluator">
+                <params>
+                    <groups>GROUP_SITE_CREATORS,GROUP_ALFRESCO_ADMINISTRATORS</groups>
+                    <groupRelation>OR</groupRelation>
+                    <negate>true</negate>
+                </params>
+            </evaluator>
+            <customizations>
+                <customization>
+                    <targetPackageRoot>org.alfresco.components.dashlets</targetPackageRoot>
+                    <sourcePackageRoot>au.org.amc.components.dashlets</sourcePackageRoot>
+                </customization>
+                <customization>
+                    <targetPackageRoot>org.alfresco.share.header</targetPackageRoot>
+                    <sourcePackageRoot>au.org.amc.share.header</sourcePackageRoot>
+                </customization>
+            </customizations>
+        </module>
+        <module>
+      		<id>Customise DocumentLinks Widget</id>
+      		<version>1.0</version>
+      		<auto-deploy>true</auto-deploy>     
+      		<customizations>
+        		<customization>
+          			<targetPackageRoot>org.alfresco.components.document-details</targetPackageRoot>
+          			<sourcePackageRoot>au.org.amc.components.document-details</sourcePackageRoot>
+        		</customization>
+      		</customizations>
+    	</module>
+    	<module>
+         <id>Customise Sites Menu</id>
+         <version>1.0</version>
+         <auto-deploy>true</auto-deploy>
+         <customizations>
+            <customization>
+               <targetPackageRoot>org.alfresco.share.header</targetPackageRoot>
+               <sourcePackageRoot>au.org.amc.share-menu</sourcePackageRoot>
+           </customization>
+         </customizations>
+      	</module>
+        
+     <module>
+     <id>Add Dependencies</id>
+     <version>1.0</version>
+     <auto-deploy>true</auto-deploy>
+     <customizations>
+        <customization>
+           <targetPackageRoot>org.alfresco</targetPackageRoot>
+            <dependencies>
+               <css>/res/components/documentlibrary/seed-amc.css </css>
+               <js>/res/components/documentlibrary/seed-amc.js </js>
+            </dependencies>
+           <sourcePackageRoot></sourcePackageRoot>
+        </customization>
+       </customizations>
+</module>
+    </modules>
+</extension>

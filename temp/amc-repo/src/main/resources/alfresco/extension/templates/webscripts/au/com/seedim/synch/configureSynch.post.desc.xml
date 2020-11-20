@@ -1,0 +1,8 @@
+<webscript>
+   <shortname>Configure Synch</shortname>
+   <description>Sets the Metadata require for Synch</description>
+   <url>/seed/synch/configure?nodeRef={nodeRef}</url>
+   <format default="json"></format>
+  <authentication>user</authentication>
+  <transaction>required</transaction>
+</webscript>

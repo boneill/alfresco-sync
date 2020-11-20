@@ -1,0 +1,144 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--
+	Licensed to the Apache Software Foundation (ASF) under one or more
+	contributor license agreements.  See the NOTICE file distributed with
+	this work for additional information regarding copyright ownership.
+	The ASF licenses this file to You under the Apache License, Version 2.0
+	(the "License"); you may not use this file except in compliance with
+	the License.  You may obtain a copy of the License at
+	
+	http://www.apache.org/licenses/LICENSE-2.0
+	
+	Unless required by applicable law or agreed to in writing, software
+	distributed under the License is distributed on an "AS IS" BASIS,
+	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	See the License for the specific language governing permissions and
+	limitations under the License.
+-->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+    <!-- Bean for Doc ID inclusion when docs created -->
+	<bean id="createNodeBehaviour" class="au.org.amc.repo.behaviour.NewContentBehaviour" init-method="init">
+        <property name="nodeService" ref="NodeService" />
+        <property name="policyComponent" ref="policyComponent" />
+        <property name="repositoryId">
+            <value>${amc.repositoryId}</value>
+        </property>
+        <property name="padding">
+            <value>0000000</value>
+        </property>
+        <property name="urlPrefix">
+            <value>/share/proxy/alfresco/amc/doc/</value>
+        </property>
+    </bean>
+    
+    <!-- Ensure system folders are setup with correct permissions and metadata -->
+    <bean id="systemFolderBehaviour" class="au.org.amc.repo.behaviour.SystemFolderBehaviour" depends-on="au.org.amc.dictionaryBootstrap" init-method="init">
+        <property name="nodeService" ref="NodeService" />
+        <property name="policyComponent" ref="policyComponent" />
+        <property name="personService" ref="PersonService"/>
+        <property name="permissionService" ref="PermissionService"/>
+        <property name="systemFolderManagerAuthorityName">
+            <value>GROUP_System Folder Managers</value>
+        </property>
+        <property name="systemFolderPermission">
+            <value>SiteConsumer</value>
+        </property>        
+        <property name="dictionaryService" ref="dictionaryService"/>
+    </bean>
+  
+   <!--  <bean id="pica.onDeleteNode" 
+      class="au.org.amc.repo.behaviour.BeforeDeleteBehaviour" 
+      init-method="init">
+    <property name="nodeService" ref="NodeService" />
+    <property name="policyComponent" ref="policyComponent" />
+    <property name="authorityService" ref="authorityService" />
+    <property name="personService" ref="PersonService" />
+    <property name="siteService" ref="SiteService" />
+    <property name="ownableService" ref="OwnableService" />
+   </bean>  -->
+       
+   <!-- Register DeleteOldMinorVersion Repo Action -->
+    <bean id="delete-old-minor-versions" class="au.org.amc.seedim.action.DeleteOldMinorVersions" parent="action-executer">
+        <property name="nodeService">
+            <ref bean="NodeService" />
+        </property>
+        <property name="versionService">
+            <ref bean="VersionService" />
+          </property>
+          <property name="versionAge">
+            <value>${amc.versionAge}</value>
+        </property>        
+    </bean>
+    
+    <!-- Register CreateSystemFolder Repo Action -->
+    <bean id="create-system-folder" class="au.org.amc.seedim.action.CreateSystemFolder" parent="action-executer">
+        <property name="nodeService">
+            <ref bean="NodeService" />
+        </property>
+        <property name="behaviourFilter"> 
+        	<ref bean="policyBehaviourFilter" />
+        </property>        
+    </bean>
+    
+    <!-- Register CreatePowerUserReport Repo Action -->
+    <bean id="create-power-user-report" class="au.org.amc.seedim.action.CreatePowerUserReport" parent="action-executer">
+        <property name="siteService">
+            <ref bean="SiteService" />
+        </property> 
+        <property name="nodeService">
+            <ref bean="NodeService" />
+        </property>
+        <property name="contentService">
+            <ref bean="ContentService" />
+        </property>  
+        <property name="searchService">
+            <ref bean="SearchService" />
+        </property> 
+        <property name="sysAdminParams">
+            <ref bean="sysAdminParams" />
+        </property>
+        <property name="reportFolderPath">
+            <value>/app:company_home/st:sites/cm:Records-and-Info-Mgt/cm:documentLibrary/cm:DOC_x0020_and_x0020_Info_x0020_Check_x0020_Ups/cm:AMC_x0020_Power_x0020_User_x0020_Reports</value>
+        </property>      
+    </bean>
+
+    <!-- JS Util class -->
+   <bean id="AMCJsUtil" parent="baseJavaScriptExtension" 
+      class="au.org.amc.seedim.util.AmcJsUtils">
+      
+    <property name="extensionName" value="amcJsUtils"/>
+    <!--<property name="policyBehaviourFilter" ref="policyBehaviourFilter" />-->
+    <property name="allServices" ref="AllServices" />
+
+   </bean>
+
+    <bean id="AllServices"
+      class="au.org.amc.repo.services.AllServices"
+      init-method="init">
+    
+    <property name="mimetypeService" ref="MimetypeService" />
+    <property name="authenticationService" ref="AuthenticationService" />
+    <property name="contentService" ref="ContentService" />
+    <property name="dictionaryService" ref="DictionaryService" />
+    <property name="fileFolderService" ref="FileFolderService" />
+    <property name="permissionService" ref="PermissionService" />
+    <property name="workflowService" ref="WorkflowService" />
+    <property name="siteService" ref="SiteService" />
+    <property name="nodeService" ref="NodeService" />
+    <property name="searchService" ref="SearchService" />
+    <property name="personService" ref="PersonService" />
+    <property name="namespaceService" ref="NamespaceService" />
+    <property name="transactionService" ref="TransactionService" />
+    <property name="serviceRegistry" ref="ServiceRegistry" />
+    <property name="policyBehaviourFilter" ref="policyBehaviourFilter" />
+    <property name="ownableService" ref="OwnableService" />
+    <property name="lockService" ref="lockService" />
+    <property name="jobLockService" ref="jobLockService" />
+    <property name="ActionService" ref="actionService" />
+  </bean>
+  
+</beans>

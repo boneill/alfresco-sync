@@ -1,0 +1,141 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--
+	Licensed to the Apache Software Foundation (ASF) under one or more
+	contributor license agreements.  See the NOTICE file distributed with
+	this work for additional information regarding copyright ownership.
+	The ASF licenses this file to You under the Apache License, Version 2.0
+	(the "License"); you may not use this file except in compliance with
+	the License.  You may obtain a copy of the License at
+	
+	http://www.apache.org/licenses/LICENSE-2.0
+	
+	Unless required by applicable law or agreed to in writing, software
+	distributed under the License is distributed on an "AS IS" BASIS,
+	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	See the License for the specific language governing permissions and
+	limitations under the License.
+-->
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+          
+          
+          
+    <!-- #######Bootstrap #######-->
+    <bean id="au.com.seed.synch.dictionaryBootstrap" parent="dictionaryModelBootstrap" depends-on="dictionaryBootstrap">
+        <property name="models">
+            <list>
+                <value>alfresco/module/${project.artifactId}/model/seed-synch-model.xml</value>
+            </list>
+        </property>
+    </bean>
+    
+    
+    <bean id="synchResourceBundles" class="org.alfresco.i18n.ResourceBundleBootstrapComponent">
+        <property name="resourceBundles">
+            <list>
+                <value>alfresco/module/${project.artifactId}/messages/synch-messages</value>
+            </list>
+        </property>
+   </bean>
+    
+<!-- #########Services################## -->
+
+<bean id="AlfrescoServices"
+      class="au.com.seedim.synch.repo.services.AlfrescoServices"
+      init-method="init">
+    
+    <property name="mimetypeService" ref="MimetypeService" />
+    <property name="authenticationService" ref="AuthenticationService" />
+    <property name="contentService" ref="ContentService" />
+    <property name="dictionaryService" ref="DictionaryService" />
+    <property name="fileFolderService" ref="FileFolderService" />
+    <property name="permissionService" ref="PermissionService" />
+    <property name="workflowService" ref="WorkflowService" />
+    <property name="siteService" ref="SiteService" />
+    <property name="nodeService" ref="NodeService" />
+    <property name="searchService" ref="SearchService" />
+    <property name="personService" ref="PersonService" />
+    <property name="namespaceService" ref="NamespaceService" />
+    <property name="transactionService" ref="TransactionService" />
+    <property name="serviceRegistry" ref="ServiceRegistry" />
+    <property name="policyBehaviourFilter" ref="policyBehaviourFilter" />
+    <property name="ownableService" ref="OwnableService" />
+    <property name="lockService" ref="lockService" />
+    <property name="jobLockService" ref="jobLockService" />
+    <property name="ActionService" ref="actionService" />
+    <property name="repositoryHelper" ref="repositoryHelper"/>
+    <property name="policyComponent" ref="policyComponent" />
+    <property name="versionService" ref="VersionService" />
+    <property name="copyService" ref="CopyService" />
+    
+
+
+  </bean>
+  
+  <bean id="SynchService"
+      class="au.com.seedim.synch.repo.services.SynchService">
+       <property name="alfrescoServices" ref="AlfrescoServices" />
+       <property name="propertiesToTrack">
+         <list>
+          <value>cm:name</value>
+          <value>cm:title</value>
+        </list>
+    </property>
+       
+  </bean>
+  
+<!-- #########Actions################## -->
+ <bean id="reset-failed-synch"
+      class="au.com.seedim.synch.repo.action.ResetFailedSynchAction" 
+      parent="action-executer">
+      <property name="alfrescoServices" ref="AlfrescoServices" />
+  </bean>  
+  <bean id="start-synch"
+      class="au.com.seedim.synch.repo.action.SynchAction" 
+      parent="action-executer">
+      <property name="alfrescoServices" ref="AlfrescoServices" />
+      <property name="synchService" ref="SynchService" />
+  </bean>  
+  
+  
+<!-- #########Webscripts################## -->
+    <bean id="webscript.au.com.seedim.synch.configureSynch.post"
+      class="au.com.seedim.synch.repo.webscripts.ConfigureSynch"
+      parent="webscript">
+          <property name="alfrescoServices" ref="AlfrescoServices" />
+    </bean> 
+    
+    <bean id="webscript.au.com.seedim.synch.unSynch.post"
+      class="au.com.seedim.synch.repo.webscripts.UnSynch"
+      parent="webscript">
+          <property name="alfrescoServices" ref="AlfrescoServices" />
+          <property name="synchService" ref="SynchService" />
+
+  </bean> 
+  
+   <!-- ########Behaviours ################-->
+
+<bean id="synchChangeMonitorBehaviour" class="au.com.seedim.synch.repo.behaviour.SynchChangeMonitor" depends-on="au.com.seed.synch.dictionaryBootstrap" init-method="init">
+    <property name="alfrescoServices" ref="AlfrescoServices" />
+    <property name="synchService" ref="SynchService" />
+    <property name="propertiesToTrack">
+       <list>
+        <value>cm:name</value>
+        <value>cm:title</value>
+      </list>
+    </property>
+</bean>
+
+<bean id="synchMemberNodeDeleteBehaviour" class="au.com.seedim.synch.repo.behaviour.SynchMemberNodeDeleteBehaviour" depends-on="au.com.seed.synch.dictionaryBootstrap" init-method="init">
+    <property name="alfrescoServices" ref="AlfrescoServices" />
+    <property name="synchService" ref="SynchService" />
+</bean>
+
+<bean id="synchMemberNodeCopyBehaviour" class="au.com.seedim.synch.repo.behaviour.SynchMemberNodeCopyBehaviour" depends-on="au.com.seed.synch.dictionaryBootstrap" init-method="init">
+    <property name="alfrescoServices" ref="AlfrescoServices" />
+    <property name="synchService" ref="SynchService" />
+</bean>
+
+</beans>

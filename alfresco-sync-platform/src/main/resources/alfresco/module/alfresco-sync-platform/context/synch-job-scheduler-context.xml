@@ -1,0 +1,58 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+<bean id="synch.SynchJobExecutor"
+          class="au.com.seedim.synch.repo.job.SynchJobExecutor">
+        <property name="serviceRegistry">
+            <ref bean="ServiceRegistry" />
+        </property>
+        <property name="synchService" ref="SynchService" />
+        <property name="actionService" ref="ActionService" />    
+
+    </bean>
+
+    <bean id="synchJob.jobDetail"
+          class="org.springframework.scheduling.quartz.JobDetailBean">
+        <property name="jobClass">
+            <value>au.com.seedim.synch.repo.job.SynchJobDetails</value>
+        </property>
+        <property name="jobDataAsMap">
+            <map>
+                <entry key="jobExecuter">
+                    <ref bean="synch.SynchJobExecutor" />
+                </entry>
+                <entry key="jobLockService">
+                    <ref bean="jobLockService" />
+                </entry>
+            </map>
+        </property>
+
+    </bean>
+
+    <bean id="synchJob.trigger"
+          class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="jobDetail">
+            <ref bean="synchJob.jobDetail" />
+        </property>
+        <property name="cronExpression">
+            <value>${synch.scheduledjob.cronexpression}</value>
+        </property>
+        <property name="startDelay">
+            <value>${synch.scheduledjob.cronstartdelay}</value>
+        </property>
+    </bean>
+
+    <bean id="synchJob.scheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="triggers">
+            <list>
+                <ref bean="synchJob.trigger"/>
+            </list>
+        </property>
+    </bean>
+
+
+
+</beans>

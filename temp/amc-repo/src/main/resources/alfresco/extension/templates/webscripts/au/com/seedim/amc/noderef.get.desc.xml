@@ -1,0 +1,8 @@
+<webscript>
+  <shortname>Get a noderef based on the AMC document id</shortname>
+  <description>Get a noderef based on the AMC document id</description>
+  <url>/amc/noderef/{docId}</url>
+  <format default="json">argument</format>
+  <authentication>user</authentication>
+  <family>AMC - Foundation</family>
+</webscript>

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model name="amc:contentModel" xmlns="http://www.alfresco.org/model/dictionary/1.0">
+	<description>AMC Content Model</description>
+	<author>Seedim</author>
+	<published>2014-11-12</published>
+	<version>1.0</version>
+
+	<!-- Imports are required to allow references to definitions in other models -->
+	<imports>
+		<import uri="http://www.alfresco.org/model/dictionary/1.0" prefix="d" />
+		<import uri="http://www.alfresco.org/model/system/1.0" prefix="sys" />
+		<import uri="http://www.alfresco.org/model/content/1.0" prefix="cm" />
+	</imports>
+
+	<namespaces>
+		<namespace uri="http://www.amc.org.au/model/1.0" prefix="amc" />
+	</namespaces>
+
+	<constraints>        
+        <constraint name="amc:securityClassificationConstraint" type="LIST">
+            <parameter name="allowedValues">
+                <list>
+                    <value></value>
+                    <value>AMC-Internal</value>
+                    <value>AMC-In-Confidence</value>
+                    <value>AMC-Executive-Eyes-Only</value>
+                    <value>AMC-Unclassified</value>
+                </list>
+            </parameter>
+        </constraint>
+	</constraints>
+
+	<types>		
+		<type name="amc:systemFolder">
+		    <title>AMC System Folder</title>
+		    <parent>cm:folder</parent>
+            <properties>
+                <property name="amc:systemFolderInactive">
+                    <title>Inactive</title>
+                    <type>d:boolean</type>
+                    <default>false</default>
+                </property>
+                <property name="amc:isSystemFolder">
+                    <title>Is System Folder</title>
+                    <type>d:boolean</type>
+                    <default>true</default>
+                </property>
+                <property name="amc:canChildrenBeAdded">
+                    <title>Users Can Add Sub-folders</title>
+                    <type>d:boolean</type>
+                    <default>false</default>
+                </property>
+            </properties>
+		</type>
+	</types>
+
+	<aspects>
+        <aspect name="amc:identifiable">
+            <title>A unique identifier for the document (across systems and independant of the database id)</title>
+            <properties>
+                <property name="amc:amcContentID">
+                    <title>AMC Document ID</title>
+                    <description>A unique number that will identify the document</description>
+                    <type>d:text</type>
+                    <mandatory enforced="true">true</mandatory>
+                </property>
+                <property name="amc:amcContentLink">
+                    <title>Content link</title>
+                    <description>The URL link to the document</description>
+                    <type>d:text</type>
+                    <mandatory enforced="true">true</mandatory>
+                </property>
+            </properties>         
+        </aspect>
+
+        <aspect name="amc:classifiable">
+            <title>Classifications of AMC content</title>
+            <properties>
+                <property name="amc:securityClassification">
+                    <title>Security Classification</title>
+                    <description>Security Classification</description>
+                    <type>d:text</type>
+                    <mandatory enforced="true">true</mandatory>
+                    <default>AMC-Unclassified</default>
+                    <constraints>
+                        <constraint ref="amc:securityClassificationConstraint" />
+                    </constraints>
+                </property>
+                <property name="amc:securityComment">
+                    <title>Security Classification Comment</title>
+                    <description>Security Classification Comment</description>
+                    <type>d:mltext</type>
+                </property>
+            </properties>
+        </aspect>
+		<aspect name="amc:migrated">
+            <title>Migration Details</title>
+            <properties>
+                <property name="amc:dateMigrated">
+                    <title>Date Migrated</title>
+                    <description>Date the migration occurred</description>
+                    <type>d:date</type>
+                </property>
+                <property name="amc:contentCreated">
+                    <title>Content Created Date</title>
+                    <description>Content Creation Date on migration</description>
+                    <type>d:datetime</type>
+                </property>
+                
+            </properties>
+        </aspect>
+        
+	</aspects>
+</model>

@@ -1,0 +1,90 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- Had to be commented out because spring could not find permissionSchema.dtd  -->
+<!--  <!DOCTYPE permissions PUBLIC '-//ALFRESCO//DTD PERMISSIONS//EN' 'permissionSchema.dtd'>-->
+
+<permissions>
+
+    <!-- Namespaces used in type references -->
+    <namespaces>
+        <namespace uri="http://www.alfresco.org/model/system/1.0" prefix="sys"/>
+        <namespace uri="http://www.alfresco.org/model/content/1.0" prefix="cm"/>
+        <namespace uri="http://www.alfresco.org/model/site/1.0" prefix="st"/>
+    </namespaces>	
+	
+    <!-- Define Site Roles with additional role for Power user.
+         Order is important, permissionGroup(s) first, then permission(s) -->
+    <permissionSet type="st:site" expose="selected">
+		
+ 	  <permissionGroup name="SiteManager" allowFullControl="true" expose="true" />
+    
+      <!--  <permissionGroup name="SitePowerUser" allowFullControl="false" expose="true">
+         <includePermissionGroup permissionGroup="Collaborator" type="cm:cmobject" />
+         <includePermissionGroup permissionGroup="DeleteNode" type="sys:base" />
+      </permissionGroup> -->
+      
+      <permissionGroup name="SitePowerUser" allowFullControl="false" expose="true">
+          <includePermissionGroup permissionGroup="PowerUser" type="cm:cmobject" />
+      </permissionGroup>
+      
+      <permissionGroup name="SiteCollaborator" allowFullControl="false" expose="true">
+         <includePermissionGroup permissionGroup="Collaborator" type="cm:cmobject" />
+      </permissionGroup>
+      
+      <permissionGroup name="SiteContributor" allowFullControl="false" expose="true">
+         <includePermissionGroup permissionGroup="Contributor" type="cm:cmobject" />
+      </permissionGroup>
+      
+      <permissionGroup name="SiteConsumer" allowFullControl="false" expose="true">
+         <includePermissionGroup permissionGroup="Consumer" type="cm:cmobject" />
+         <includePermissionGroup permissionGroup="ReadPermissions" type="sys:base" />
+	  </permissionGroup>  
+         
+	</permissionSet>
+  
+
+    <permissionSet type="cm:cmobject" expose="selected">
+
+      <permissionGroup name="Administrator" allowFullControl="true" expose="false" />
+
+      <permissionGroup name="Coordinator" allowFullControl="true" expose="true" />
+      
+      <permissionGroup name="PowerUser" allowFullControl="false" expose="true">
+          <includePermissionGroup permissionGroup="Collaborator" type="cm:cmobject" />
+          <includePermissionGroup permissionGroup="DeleteNode" type="sys:base" />
+      </permissionGroup>
+ 
+      <permissionGroup name="Collaborator" allowFullControl="false" expose="true">
+         <includePermissionGroup permissionGroup="Editor" type="cm:cmobject" />
+         <includePermissionGroup permissionGroup="Contributor" type="cm:cmobject" />
+      </permissionGroup>
+
+      <permissionGroup name="Contributor" allowFullControl="false" expose="true" >
+          <includePermissionGroup permissionGroup="Consumer" type="cm:cmobject"/>
+          <includePermissionGroup permissionGroup="AddChildren" type="sys:base"/>
+          <includePermissionGroup permissionGroup="ReadPermissions" type="sys:base" />
+      </permissionGroup>
+      
+      <permissionGroup name="Editor"  expose="true" allowFullControl="false" >
+          <includePermissionGroup type="cm:cmobject" permissionGroup="Consumer"/>
+          <includePermissionGroup type="sys:base" permissionGroup="Write"/>
+          <includePermissionGroup type="cm:lockable" permissionGroup="CheckOut"/>
+          <includePermissionGroup type="sys:base" permissionGroup="ReadPermissions"/>
+      </permissionGroup>
+
+      <permissionGroup name="Consumer" allowFullControl="false" expose="true" >
+          <includePermissionGroup permissionGroup="Read" type="sys:base" />
+      </permissionGroup>
+
+      <permissionGroup name="RecordAdministrator" allowFullControl="false" expose="false">
+          <includePermissionGroup type="sys:base" permissionGroup="ReadProperties"/>
+          <includePermissionGroup type="sys:base" permissionGroup="ReadChildren"/>
+          <includePermissionGroup type="sys:base" permissionGroup="WriteProperties"/>
+          <includePermissionGroup type="sys:base" permissionGroup="ReadContent"/>
+          <includePermissionGroup type="sys:base" permissionGroup="DeleteChildren"/>
+          <includePermissionGroup type="sys:base" permissionGroup="CreateChildren"/>
+          <includePermissionGroup type="sys:base" permissionGroup="LinkChildren"/>
+          <includePermissionGroup type="sys:base" permissionGroup="DeleteAssociations"/>
+          <includePermissionGroup type="sys:base" permissionGroup="CreateAssociations"/>
+      </permissionGroup>
+    </permissionSet>
+</permissions>
