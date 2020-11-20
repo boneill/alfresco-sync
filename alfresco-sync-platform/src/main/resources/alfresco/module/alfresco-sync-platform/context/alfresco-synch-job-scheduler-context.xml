@@ -28,6 +28,9 @@
                 <entry key="jobLockService">
                     <ref bean="jobLockService" />
                 </entry>
+                <entry key="runAsUserName">
+                     <value>${synch.scheduledjob.runasusername}</value>
+                </entry>
             </map>
         </property>
     </bean>
