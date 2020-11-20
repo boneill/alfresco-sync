@@ -1,8 +1,0 @@
-<webscript>
-   <shortname>UnSynch Folder</shortname>
-   <description>Remove Synch from folder</description>
-   <url>/seed/synch/unsynch?nodeRef={nodeRef}</url>
-   <format default="json"></format>
-  <authentication>user</authentication>
-  <transaction>required</transaction>
-</webscript>

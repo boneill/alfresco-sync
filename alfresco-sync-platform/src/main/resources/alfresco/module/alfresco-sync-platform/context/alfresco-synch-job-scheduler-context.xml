@@ -4,21 +4,22 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
           http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
 
-<bean id="synch.SynchJobExecutor"
+    <bean id="synch.SynchJobExecutor"
           class="au.com.seedim.synch.repo.job.SynchJobExecutor">
         <property name="serviceRegistry">
             <ref bean="ServiceRegistry" />
         </property>
         <property name="synchService" ref="SynchService" />
-        <property name="actionService" ref="ActionService" />    
-
-    </bean>
+        <property name="actionService" ref="ActionService" />  
+   </bean>
+    
 
     <bean id="synchJob.jobDetail"
-          class="org.springframework.scheduling.quartz.JobDetailBean">
+          class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
         <property name="jobClass">
             <value>au.com.seedim.synch.repo.job.SynchJobDetails</value>
         </property>
+        
         <property name="jobDataAsMap">
             <map>
                 <entry key="jobExecuter">
@@ -29,12 +30,11 @@
                 </entry>
             </map>
         </property>
-
     </bean>
 
     <bean id="synchJob.trigger"
-          class="org.springframework.scheduling.quartz.CronTriggerBean">
-        <property name="jobDetail">
+          class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+         <property name="jobDetail">
             <ref bean="synchJob.jobDetail" />
         </property>
         <property name="cronExpression">
@@ -44,15 +44,16 @@
             <value>${synch.scheduledjob.cronstartdelay}</value>
         </property>
     </bean>
-
-    <bean id="synchJob.scheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
-        <property name="triggers">
-            <list>
-                <ref bean="synchJob.trigger"/>
-            </list>
-        </property>
-    </bean>
-
+    
+    <bean id="synchJob.schedulerAccessor"
+		class="org.springframework.scheduling.quartz.SchedulerAccessorBean">
+		<property name="scheduler" ref="schedulerFactory" />
+		<property name="triggers">
+		<list>
+			<ref bean="synchJob.trigger"/>
+		</list>
+	</property>
+	</bean>
 
 
 </beans>

@@ -1,8 +1,0 @@
-<webscript>
-  <shortname>Build Email link Parameters</shortname>
-  <description>Build Email link Parameters</description>
-  <url>/amc/emailink/{nodeRefArr}</url>
-  <format default="json">argument</format>
-  <authentication>user</authentication>
-  <family>AMC - Foundation</family>
-</webscript>

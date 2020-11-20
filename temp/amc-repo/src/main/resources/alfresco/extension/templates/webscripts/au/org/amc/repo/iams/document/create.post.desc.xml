@@ -1,9 +1,0 @@
-<webscript>
-   <shortname>Create Armature Document</shortname>
-   <description>Create a report or attachement</description>
-   <url>/amc/iams/document/create</url>
-   <format default="">argument</format>
-  <authentication>user</authentication>
-  <!--  <transaction>none</transaction>-->
-  <transaction>required</transaction>
-</webscript>

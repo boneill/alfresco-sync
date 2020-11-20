@@ -1,5 +1,0 @@
-<webscript>
-   <shortname>Navigate to document details page</shortname>
-   <description>Navigate to document details page</description>
-   <url>/service/details/{docId}</url>
-</webscript>
