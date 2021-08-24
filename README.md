@@ -11,9 +11,9 @@ The Alfresco Sync Addon allows synching content at a folder level from one site 
  		   ./run.sh build_start
     The above command generates two jars located in the following directory;
    	 Repo Jar
-    	alfresco-sync/alfresco-sync-platform/target/alfresco-sync-platform-1.0-SNAPSHOT.jar
-	    Share Jar
- 	   alfresco-sync/alfresco-sync-share/target/alfresco-sync-share-1.0-SNAPSHOT.jar
+    		alfresco-sync/alfresco-sync-platform/target/alfresco-sync-platform-1.0-SNAPSHOT.jar
+	 Share Jar
+ 	 	alfresco-sync/alfresco-sync-share/target/alfresco-sync-share-1.0-SNAPSHOT.jar
 
 **Installing Alfresco Sync Addon**
 
