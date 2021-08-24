@@ -34,7 +34,7 @@ public class SynchJobDetails extends AbstractScheduledLockedJob implements State
             jobExecuter.execute();
             return null;
         }
-    }, "alfresco.synch");
+    }, "admin");
   }
 
 
