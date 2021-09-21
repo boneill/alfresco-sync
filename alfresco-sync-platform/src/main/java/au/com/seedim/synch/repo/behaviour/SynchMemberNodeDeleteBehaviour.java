@@ -34,6 +34,7 @@ public class SynchMemberNodeDeleteBehaviour implements BeforeDeleteNodePolicy{
   
   private static final Logger logger = Logger.getLogger(SynchMemberNodeDeleteBehaviour.class);
   
+  
 //Key to identify resources associated to transaction
   private static final String KEY_RELATED_NODES = 
       SynchMemberNodeDeleteBehaviour.class.getName() + ".relatedNodes";
@@ -85,7 +86,8 @@ public class SynchMemberNodeDeleteBehaviour implements BeforeDeleteNodePolicy{
         NodeRef targetNodeRef = targetRefString != null? new NodeRef(targetRefString) : null;
       
         if(targetNodeRef != null && nodeService.exists(targetNodeRef)){
-          nodeService.deleteNode(targetNodeRef);
+          //nodeService.deleteNode(targetNodeRef);
+        	this.synchService.deleteNode(targetNodeRef);
         }
       
        }catch (Exception e){
@@ -96,7 +98,6 @@ public class SynchMemberNodeDeleteBehaviour implements BeforeDeleteNodePolicy{
       }
     }
 
-  
   
  /** @Override
   public void beforeDeleteNode(NodeRef nodeRef) {
@@ -274,6 +275,5 @@ public class SynchMemberNodeDeleteBehaviour implements BeforeDeleteNodePolicy{
   public void setSynchService(SynchService synchService) {
     this.synchService = synchService;
   }
-
 
 }

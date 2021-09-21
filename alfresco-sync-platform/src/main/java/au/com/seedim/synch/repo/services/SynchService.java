@@ -72,6 +72,7 @@ public class SynchService {
   private ContentService contentService;
   private MimetypeService mimetypeService;
   private LockService lockService;
+  private String runAsUserName;
   
   public Boolean found;
   public List<String> propertiesToTrack;
@@ -445,6 +446,8 @@ public class SynchService {
     
     if(logger.isDebugEnabled()) {logger.debug("Entered addMemberDetailsProperties for: " + sourceNodeRef  );}
     
+    this.disableBehaviour(sourceNodeRef, ContentModel.ASPECT_AUDITABLE);
+    
     if(sourceNodeRef != null){
       
         try{
@@ -488,7 +491,7 @@ public class SynchService {
         
         }finally{
           
-          
+          this.enableBehaviour(sourceNodeRef, ContentModel.ASPECT_AUDITABLE);
           if(logger.isDebugEnabled()) {logger.debug("Exited addMemberDetailsProperties...."  );}
         }
     }
@@ -509,6 +512,7 @@ public class SynchService {
     
     
     if(logger.isDebugEnabled()) {logger.debug("Entered createTargetFolderFromSource...."  );}
+    //this.disableBehaviour(sourceNodeRef, ContentModel.ASPECT_AUDITABLE);
     
     String srcFolderName = (String)nodeService.getProperty(sourceNodeRef, ContentModel.PROP_NAME);
     FileInfo fi = fileFolderService.create(targetNodeRef, srcFolderName , ContentModel.TYPE_FOLDER);
@@ -525,6 +529,8 @@ public class SynchService {
     this.syncPropertyChange(sourceNodeRef);
     
     if(logger.isDebugEnabled()) {logger.debug("createTargetFolderFromSource:  Created targetFolder: " + fi.getName()  );}
+    
+    //this.enableBehaviour(sourceNodeRef, ContentModel.ASPECT_AUDITABLE);
             
      return fi.getNodeRef();
   
@@ -881,6 +887,8 @@ public class SynchService {
           
           for (NodeRef sourceNodeRef : syncNodes.getNodeRefs()){
             
+        	if(logger.isDebugEnabled()) {logger.debug("SyncService.syncNodes: processing source node:  " + sourceNodeRef  );}
+        	  
             boolean syncLockOwner = false;
                 //get syncNode Parent Name and Check is it exist in target   
               try{
@@ -903,7 +911,15 @@ public class SynchService {
                   if(!nodeService.hasAspect(sourceNodeRef, SeedSynchModel.ASPECT_SYNCH_SOURCE)){
                     NodeRef sourceParentRef = this.nodeService.getPrimaryParent(sourceNodeRef).getParentRef();
                     String targetParentRefString = (String)this.nodeService.getProperty(sourceParentRef, SeedSynchModel.PROP_SYNCED_TARGET_REF);
-                    targetParentRef = new NodeRef(targetParentRefString);
+                    if(logger.isDebugEnabled()) {logger.debug("SyncService.syncNodes: targetParentRef:  " + targetParentRef  );}
+                    
+                    if(targetParentRefString != null)
+                    	targetParentRef = new NodeRef(targetParentRefString);
+                    else {
+                    	
+                    	// target parent ref has not been set on the parent source yet so continue and pick up next time job runs
+                    	continue;
+                    }
                   }
                   Map<QName, Serializable> nodeProps = nodeService.getProperties(sourceNodeRef);
                   Boolean contentChanged = (Boolean)nodeProps.get(SeedSynchModel.PROP_HAS_CONTENT_CHANGED);
@@ -1211,6 +1227,16 @@ public class SynchService {
       behaviourFilter.enableBehaviour(SeedSynchModel.ASPECT_SYNCH_MEMBER_NODE);
 
   }
+  public void disableSynchBehaviours(NodeRef nodeRef)
+  {
+      behaviourFilter.disableBehaviour(nodeRef,SeedSynchModel.ASPECT_SYNCH_MEMBER_NODE);
+  }
+  
+  public void enableSynchBehaviours(NodeRef nodeRef)
+  {
+      behaviourFilter.enableBehaviour(nodeRef,SeedSynchModel.ASPECT_SYNCH_MEMBER_NODE);
+
+  }
   public void disableBehaviour(NodeRef nodeRef, QName aspect)
   {
       behaviourFilter.disableBehaviour(nodeRef, aspect);
@@ -1240,7 +1266,7 @@ public class SynchService {
         return null;
       }
     };
-    String user = AuthenticationUtil.getSystemUserName();
+    String user = AuthenticationUtil.getAdminUserName();
     AuthenticationUtil.runAs(work, user);
   }
   
@@ -1251,7 +1277,7 @@ public class SynchService {
         return null;
       }
     };
-    String user = AuthenticationUtil.getSystemUserName();
+    String user = AuthenticationUtil.getAdminUserName();
     AuthenticationUtil.runAs(work, user);
   }
   
@@ -1538,5 +1564,29 @@ public class SynchService {
         lockService.unlock(nodeRef);
       }
     }
+    
+
+	public String getRunAsUserName() {
+		return runAsUserName;
+	}
+
+	public void setRunAsUserName(String runAsUserName) {
+		this.runAsUserName = runAsUserName;
+	}
+	
+	/**
+     * Deletes node as synch user
+     * @return
+     */
+    public void deleteNode(NodeRef targetNodeRef) {
+	    RunAsWork<Void> work = new RunAsWork<Void>() {
+	      public Void doWork() throws Exception {
+	    	  nodeService.deleteNode(targetNodeRef);
+	        return null;
+	      }
+	    };
+	    String user = this.getRunAsUserName();
+	    AuthenticationUtil.runAs(work, user);
+	 }
 
 }

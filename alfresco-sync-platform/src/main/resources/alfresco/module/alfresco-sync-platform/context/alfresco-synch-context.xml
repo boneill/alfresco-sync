@@ -83,6 +83,9 @@
           <value>cm:title</value>
         </list>
     </property>
+    <property name="runAsUserName">
+    	<value>${synch.scheduledjob.runasusername}</value>
+    </property>
        
   </bean>
   

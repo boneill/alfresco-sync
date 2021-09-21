@@ -105,7 +105,8 @@ public class SynchChangeMonitor implements OnCreateChildAssociationPolicy,
     
     if(logger.isDebugEnabled()) logger.debug("SynchChangeMonitor.onCreateChildAssociation method entered for node " + childAssoc.getChildRef() + " isNewNode: " + isNewNode);
     
-    if (childAssoc.isPrimary() && isNewNode)
+    //if (childAssoc.isPrimary() && isNewNode)
+    if (childAssoc.isPrimary())
     {
         NodeRef childNodeRef = childAssoc.getChildRef();
 //        NodeRef parentNodeRef = childAssocRef.getParentRef();
