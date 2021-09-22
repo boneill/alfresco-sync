@@ -30,6 +30,5 @@
 	<import resource="classpath:alfresco/module/${project.artifactId}/context/webscript-context.xml" />
 	<import resource="classpath:alfresco/module/${project.artifactId}/context/alfresco-synch-context.xml" />
     <import resource="classpath:alfresco/module/${project.artifactId}/context/alfresco-synch-job-scheduler-context.xml" />
-	
 
 </beans>

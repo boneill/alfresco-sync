@@ -18,15 +18,13 @@ services:
       dockerfile: ./Dockerfile
       context: ../../../alfresco-sync-platform-docker/target
     environment:
+      JAVA_TOOL_OPTIONS: "${keystore.settings}"
       CATALINA_OPTS: "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=0.0.0.0:8888"
-    command: ["catalina.sh", "run"]
     ports:
       - "${acs.port}:8080"
       - "${acs.debug.port}:8888"
     volumes:
       - alfresco-sync-acs-volume:/usr/local/tomcat/alf_data
-      - ../../../alfresco-sync-platform/target/classes:/usr/local/tomcat/hotswap-agent/alfresco-sync-platform/target/classes
-      - ../../../alfresco-sync-integration-tests/target/test-classes:/usr/local/tomcat/hotswap-agent/alfresco-sync-integration-tests/target/test-classes
     depends_on:
       - alfresco-sync-postgres
   alfresco-sync-postgres:

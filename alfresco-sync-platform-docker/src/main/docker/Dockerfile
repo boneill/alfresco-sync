@@ -4,26 +4,6 @@ ARG TOMCAT_DIR=/usr/local/tomcat
 
 USER root
 
-# HOTSWAP AGENT
-# Install and configure Trava OpenJDK (OpenJDK pre-built with DCEVM and hotswap agent for Java 11)
-COPY java11-openjdk-dcevm-linux.tar.gz $TOMCAT_DIR
-RUN tar -xvf $TOMCAT_DIR/java11-openjdk-dcevm-linux.tar.gz -C /usr/java/ && \
-    rm $TOMCAT_DIR/java11-openjdk-dcevm-linux.tar.gz && \
-    alternatives --install /usr/bin/java java /usr/java/dcevm-11.0.6+1/bin/java 40000 && \
-    alternatives --install /usr/bin/javac javac /usr/java/dcevm-11.0.6+1/bin/javac 40000 && \
-    alternatives --install /usr/bin/jar jar /usr/java/dcevm-11.0.6+1/bin/jar 40000 && \
-    alternatives --set java /usr/java/dcevm-11.0.6+1/bin/java && \
-    alternatives --set javac /usr/java/dcevm-11.0.6+1/bin/javac && \
-    alternatives --set jar /usr/java/dcevm-11.0.6+1/bin/jar && \
-    ln -sfn /usr/java/dcevm-11.0.6+1 /usr/java/latest && \
-    ln -sfn /usr/java/dcevm-11.0.6+1 /usr/java/default
-
-# Copy the configuration properties file in the classpath
-COPY hotswap-agent.properties $TOMCAT_DIR/webapps/alfresco/WEB-INF/classes
-
-
-
-
 # Copy Dockerfile to avoid an error if no JARs exist
 COPY Dockerfile extensions/*.jar $TOMCAT_DIR/webapps/alfresco/WEB-INF/lib/
 
@@ -40,5 +20,3 @@ COPY disable-webscript-caching-context.xml $TOMCAT_DIR/shared/classes/alfresco/e
 COPY Dockerfile license/*.* $TOMCAT_DIR/webapps/alfresco/WEB-INF/classes/alfresco/extension/license/
 
 USER ${USERNAME}
-
-
